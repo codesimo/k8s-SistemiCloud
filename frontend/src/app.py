@@ -3,10 +3,10 @@ import os
 import requests
 
 app = Flask(__name__)
-port = int(os.environ.get("FRONTEND_PORT", 5000))
+port = int(os.environ.get("FRONTEND_PORT", '5000'))
 
 backend_host = os.environ.get('BACKEND_HOST', 'backend')
-backend_port = os.environ.get('BACKEND_PORT', '8888')
+backend_port = int(os.environ.get('BACKEND_PORT', '8888'))
 
 
 @app.route('/')
@@ -26,7 +26,7 @@ def add():
     last_name = request.form.get('last_name')
 
     try:
-        requests.post('http://backend:8888/add',
+        requests.post(f'http://{backend_host}:{backend_port}/add',
                       json={"first_name": first_name, "last_name": last_name})
     except Exception as e:
         return make_response('Non funziona il backend! ' + str(e), 500)

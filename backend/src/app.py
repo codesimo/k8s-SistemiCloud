@@ -2,7 +2,7 @@ from flask import Flask, request, make_response, jsonify
 import os
 from sqlalchemy.orm import Session
 from models import User, connect_db
-backend_port = os.environ.get('BACKEND_PORT', '8888')
+backend_port = int(os.environ.get('BACKEND_PORT', '8888'))
 
 postgres_host = os.environ.get('POSTGRES_HOST', 'localhost')
 postgres_port = os.environ.get('POSTGRES_PORT', '5432')

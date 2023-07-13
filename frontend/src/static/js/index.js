@@ -1,4 +1,4 @@
-var exampleModal = document.getElementById("exampleModalCenter");
+var exampleModal = document.getElementById("modalId");
 
 exampleModal.addEventListener("show.bs.modal", function (event) {
   var first_name = exampleModal.querySelector("#first_name");
