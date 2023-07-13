@@ -29,7 +29,8 @@ class User(Base):
 
 def connect_db(postgres_user: str, postgres_password: str, postgres_host: str, postgres_port: int, postgres_db: str) -> None:
     engine = create_engine(
-        f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}"
+        f"postgresql+psycopg2://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}",
+        isolation_level="READ UNCOMMITTED"
     )
     Base.metadata.create_all(engine)
     return engine
