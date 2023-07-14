@@ -1,3 +1,4 @@
+import socket
 from flask import Flask, request, make_response, jsonify
 import os
 from sqlalchemy.orm import Session
@@ -5,12 +6,14 @@ from models import User, connect_db
 backend_port = int(os.environ.get('BACKEND_PORT', '8888'))
 
 postgres_host = os.environ.get('POSTGRES_HOST', 'localhost')
-postgres_port = os.environ.get('POSTGRES_PORT', '5432')
+postgres_port = int('5432')
 
 postgres_user = os.environ.get('POSTGRES_USER', 'postgres')
 postgres_password = os.environ.get('POSTGRES_PASSWORD', 'postgres')
 postgres_db = os.environ.get('POSTGRES_DB', 'postgres')
 
+
+hostname = socket.gethostname()
 app = Flask(__name__)
 
 engine = connect_db(postgres_user, postgres_password,
@@ -59,6 +62,21 @@ def update(id):
         session.commit()
 
     return make_response("Ok", 200)
+
+
+@app.route('/health')
+def health():
+    return make_response("Ok", 200)
+
+
+@app.route('/die')
+def die():
+    os._exit(1)
+
+
+@app.route('/name')
+def name():
+    return make_response(hostname, 200)
 
 
 if __name__ == '__main__':

@@ -1,15 +1,14 @@
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
   name: postgres-config
   labels:
     app: postgres-db
-data:
+stringData:
   POSTGRES_USER: admin
   POSTGRES_PASSWORD: mypass
   POSTGRES_DB: postgresdb
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -47,6 +46,12 @@ spec:
           env:
             - name: BACKEND_HOST
               value: backend-service
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 5
           resources:
             limits:
               cpu: 100m
@@ -83,13 +88,19 @@ spec:
           image: mybackend
           imagePullPolicy: Never
           envFrom:
-            - configMapRef:
+            - secretRef:
                 name: postgres-config
           env:
             - name: POSTGRES_HOST
               value: postgres
           ports:
             - containerPort: 8888
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 5
           resources:
             limits:
               cpu: 100m
@@ -125,7 +136,7 @@ kind: Deployment
 metadata:
   name: postgres-db-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: postgres-db
@@ -140,7 +151,7 @@ spec:
           ports:
             - containerPort: 5432
           envFrom:
-            - configMapRef:
+            - secretRef:
                 name: postgres-config
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
