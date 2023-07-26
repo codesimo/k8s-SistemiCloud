@@ -2,6 +2,54 @@
 
 This repository contains a simple 3-layer application deployed in Kubernetes, using Flask for the frontend and backend layers, and PostgreSQL for the database layer.
 
+```mermaid
+flowchart LR
+
+  user(((user)))
+
+  feService((Frontend Service))
+
+  subgraph Frontend Layer
+    fwNode1(Frontend Pod 1 - Flask)
+    fwNode2(Frontend Pod 2 - Flask)
+    fwNode3(Frontend Pod 3 - Flask)
+  end
+
+  beService((Backend service))
+
+  subgraph Backend Layer
+    beNode1(Backend Pod 1 - Flask)
+    beNode2(Backend Pod 2 - Flask)
+    beNode3(Backend Pod 3 - Flask)
+  end
+
+  dbService((Database service))
+
+  subgraph Database Layer
+    dbNode[(PostgreSQL Pod - Database)]
+  end
+
+  user --> feService
+
+  feService --> fwNode1
+  feService --> fwNode2
+  feService --> fwNode3
+
+  fwNode1 --> beService
+  fwNode2 --> beService
+  fwNode3 --> beService
+
+  beService --> beNode1
+  beService --> beNode2
+  beService --> beNode3
+
+  beNode1 --> dbService
+  beNode2 --> dbService
+  beNode3 --> dbService
+
+  dbService --> dbNode
+```
+
 ## Prerequisites
 
 Before running the application, ensure you have the following installed:
